@@ -6,8 +6,12 @@ namespace SVS.WeaponSystem
 {
     public class Weapon : MonoBehaviour
     {
-        public float shootingDelay = 0.2f;
         public bool shootingDelayed;
+
+        [SerializeField]
+        private AttackPatternSO attackPattern;
+        [SerializeField]
+        private Transform shootingStartPoint;
 
         public GameObject projectile;
         public AudioSource gunAudio;
@@ -17,15 +21,17 @@ namespace SVS.WeaponSystem
             if (shootingDelayed == false)
             {
                 shootingDelayed = true;
-                gunAudio.Play();
-                GameObject p = Instantiate(projectile, transform.position, Quaternion.identity);
+                gunAudio.PlayOneShot(attackPattern.AudioSFX);
+
+                attackPattern.Perform(shootingStartPoint);
+
                 StartCoroutine(DelayShooting());
             }
         }
 
         private IEnumerator DelayShooting()
         {
-            yield return new WaitForSeconds(shootingDelay);
+            yield return new WaitForSeconds(attackPattern.AttackDelay);
             shootingDelayed = false;
         }
     }
