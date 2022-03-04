@@ -7,8 +7,7 @@ namespace SVS.WeaponSystem
     [CreateAssetMenu(menuName = "Attacks/DoubleBarrelAttack")]
     public class DoubleBarrelAttackSO : AttackPatternSO
     {
-        [SerializeField]
-        private GameObject projectile;
+        
         [SerializeField]
         private float offsetFromShootingPoint = 0.3f;
 

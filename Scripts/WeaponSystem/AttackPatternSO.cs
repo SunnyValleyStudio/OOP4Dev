@@ -12,6 +12,9 @@ namespace SVS.WeaponSystem
         public float AttackDelay => attackDelay;
 
         [SerializeField]
+        protected GameObject projectile;
+
+        [SerializeField]
         protected AudioClip weaponSFX;
 
         public AudioClip AudioSFX => weaponSFX;

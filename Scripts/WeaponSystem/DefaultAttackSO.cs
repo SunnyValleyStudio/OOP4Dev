@@ -7,7 +7,6 @@ namespace SVS.WeaponSystem
     [CreateAssetMenu(menuName = "Attacks/DefaultAttack")]
     public class DefaultAttackSO : AttackPatternSO
     {
-        public GameObject projectile;
 
         public override void Perform(Transform shootingStartPoint)
         {

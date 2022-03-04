@@ -7,8 +7,6 @@ namespace SVS.WeaponSystem
     [CreateAssetMenu(menuName = "Attacks/SpreadAttack")]
     public class SpreadAttackSO : AttackPatternSO
     {
-        [SerializeField]
-        private GameObject projectile;
 
         [SerializeField]
         private float angleDegrees = 5;

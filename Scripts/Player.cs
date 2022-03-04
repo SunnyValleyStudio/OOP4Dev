@@ -55,14 +55,12 @@ public class Player : MonoBehaviour
         //shooting
         if (Input.GetKey(KeyCode.Space))
         {
-            //if(shootingDelayed == false)
-            //{
-            //    shootingDelayed = true;
-            //    gunAudio.Play();
-            //    GameObject p = Instantiate(projectile, transform.position, Quaternion.identity);
-            //    StartCoroutine(DelayShooting());
-            //}
             weapon.PerformAttack();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            weapon.SwapWeapon();
         }
     }
 

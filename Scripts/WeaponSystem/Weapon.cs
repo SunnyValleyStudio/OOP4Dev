@@ -16,6 +16,21 @@ namespace SVS.WeaponSystem
         public GameObject projectile;
         public AudioSource gunAudio;
 
+        [SerializeField]
+        List<AttackPatternSO> weapons;
+        private int index = 0;
+        [SerializeField]
+        private AudioClip weaponSwap;
+
+        public void SwapWeapon()
+        {
+            index++;
+            index = index >= weapons.Count ? 0 : index;
+            attackPattern = weapons[index];
+            gunAudio.PlayOneShot(weaponSwap);
+
+        }
+
         public void PerformAttack()
         {
             if (shootingDelayed == false)
