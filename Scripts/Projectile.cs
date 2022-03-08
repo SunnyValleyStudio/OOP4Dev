@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IHittable
 {
     public float speed = 10;
     public Rigidbody2D rb2d;
@@ -24,7 +24,15 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.GetComponent<Projectile>() || collision.GetComponent<Enemy>() || collision.GetComponent<Player>())
-            Destroy(gameObject);
+        IHittable hittable = collision.GetComponent<IHittable>();
+        if (hittable != null)
+        {
+            hittable.GetHit(1, gameObject);
+        }
+    }
+
+    public void GetHit(int damageValue, GameObject sender)
+    {
+        Destroy(gameObject);
     }
 }
