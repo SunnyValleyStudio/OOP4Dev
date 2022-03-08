@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IHittable
 {
     public Player player;
     public int health = 3;
@@ -74,44 +74,17 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<ScreenBounds>())
-            return;
-
-        if (collision.GetComponent<Player>())
+        IHittable hittable = collision.GetComponent<IHittable>();
+        if (hittable != null && collision.GetComponent<Player>())
         {
-            enemySpawner.EnemyKilled(this, false);
-            GetComponent<Collider2D>().enabled = false;
-            StopAllCoroutines();
-            GetComponent<SpriteRenderer>().enabled = false;
-            Instantiate(explosionFX, transform.position, Quaternion.identity);
-            StartCoroutine(DestroyCoroutine());
-            return;
+            hittable.GetHit(1, gameObject);
+            Death();
         }
-
-        //Debug.Log(collision.name);
-        health--;
-        
-        if (health <= 0)
-        {
-            enemySpawner.EnemyKilled(this, true);
-            GetComponent<Collider2D>().enabled = false;
-            StopAllCoroutines();
-            GetComponent<SpriteRenderer>().enabled = false;
-            Instantiate(explosionFX, transform.position, Quaternion.identity);
-            StartCoroutine(DestroyCoroutine());
-        }
-        else
-        {
-            hitSource.PlayOneShot(hitClip);
-            Instantiate(hitParticle, transform.position, Quaternion.identity);
-        }
-            
     }
 
     private IEnumerator DestroyCoroutine()
     {
         yield return new WaitForSeconds(1);
-        Debug.Log("Destroy");
         Destroy(gameObject);
     }
 
@@ -121,4 +94,33 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void GetHit(int damageValue, GameObject sender)
+    {
+        health--;
+
+        if (health <= 0)
+        {
+            Death();
+        }
+        else
+        {
+            GetHitFeedback();
+        }
+    }
+
+    private void GetHitFeedback()
+    {
+        hitSource.PlayOneShot(hitClip);
+        Instantiate(hitParticle, transform.position, Quaternion.identity);
+    }
+
+    private void Death()
+    {
+        enemySpawner.EnemyKilled(this, true);
+        GetComponent<Collider2D>().enabled = false;
+        StopAllCoroutines();
+        GetComponent<SpriteRenderer>().enabled = false;
+        Instantiate(explosionFX, transform.position, Quaternion.identity);
+        StartCoroutine(DestroyCoroutine());
+    }
 }

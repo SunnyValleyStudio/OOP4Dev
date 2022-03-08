@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IHittable
 {
     public float speed = 2;
 
@@ -103,15 +103,22 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void GetHitFeedback()
     {
-        if (collision.GetComponent<ScreenBounds>() || collision.GetComponent<BottomCollider>())
-            return;
+        hitSource.PlayOneShot(hitClip);
+    }
 
-        //Debug.Log(collision.name);
-        
-        health--;
+    private void Death()
+    {
+        isAlive = false;
+        hitSource.PlayOneShot(deathClip);
+        GetComponent<Collider2D>().enabled = false;
+        GetComponentInChildren<SpriteRenderer>().enabled = false;
+        StartCoroutine(DestroyCoroutine());
+    }
+
+    private void UpdateUI()
+    {
         for (int i = 0; i < lives.Count; i++)
         {
             if (i >= health)
@@ -122,19 +129,7 @@ public class Player : MonoBehaviour
             {
                 lives[i].color = Color.white;
             }
-            
-        }
-        if (health <= 0)
-        {
-            isAlive = false;
-            hitSource.PlayOneShot(deathClip);
-            GetComponent<Collider2D>().enabled = false;
-            GetComponentInChildren<SpriteRenderer>().enabled = false;
-            StartCoroutine(DestroyCoroutine());
-        } 
-        else
-        {
-            hitSource.PlayOneShot(hitClip);
+
         }
     }
 
@@ -147,4 +142,17 @@ public class Player : MonoBehaviour
         menuButton.interactable = false;
     }
 
+    public void GetHit(int damageValue, GameObject sender)
+    {
+        health -= damageValue;
+        UpdateUI();
+        if(health<= 0)
+        {
+            Death();
+        }
+        else
+        {
+            GetHitFeedback();
+        }
+    }
 }
