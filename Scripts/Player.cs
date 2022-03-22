@@ -23,10 +23,10 @@ public class Player : MonoBehaviour
     Rigidbody2D rb2d;
     Vector2 movementVector = Vector2.zero;
 
-    public AudioClip hitClip, deathClip;
-    public AudioSource hitSource;
+    //public AudioClip hitClip, deathClip;
+    //public AudioSource hitSource;
 
-    public GameObject explosionFX;
+    //public GameObject explosionFX;
 
     public bool isAlive = true;
 
@@ -49,7 +49,6 @@ public class Player : MonoBehaviour
         health.OnDeath.AddListener(Death);
         health.OnDeath.AddListener(UpdateUI);
         health.OnHit.AddListener(UpdateUI);
-        health.OnHit.AddListener(GetHitFeedback);
     }
 
     private void OnDisable()
@@ -57,7 +56,6 @@ public class Player : MonoBehaviour
         health.OnDeath.RemoveListener(Death);
         health.OnDeath.RemoveListener(UpdateUI);
         health.OnHit.RemoveListener(UpdateUI);
-        health.OnHit.RemoveListener(GetHitFeedback);
     }
 
     private void Awake()
@@ -104,42 +102,12 @@ public class Player : MonoBehaviour
 
     public void ReduceLives()
     {
-        initialHealthValue--;
-        for (int i = 0; i < lives.Count; i++)
-        {
-            if (i >= initialHealthValue)
-            {
-                lives[i].color = Color.black;
-            }
-            else
-            {
-                lives[i].color = Color.white;
-            }
-
-        }
-        if (initialHealthValue <= 0)
-        {
-            isAlive = false;
-            hitSource.PlayOneShot(deathClip);
-            GetComponent<Collider2D>().enabled = false;
-            GetComponentInChildren<SpriteRenderer>().enabled = false;
-            StartCoroutine(DestroyCoroutine());
-        }
-        else
-        {
-            hitSource.PlayOneShot(hitClip);
-        }
-    }
-
-    private void GetHitFeedback()
-    {
-        hitSource.PlayOneShot(hitClip);
+        health.GetHit(1, gameObject);
     }
 
     private void Death()
     {
         isAlive = false;
-        hitSource.PlayOneShot(deathClip);
         GetComponent<Collider2D>().enabled = false;
         GetComponentInChildren<SpriteRenderer>().enabled = false;
         StartCoroutine(DestroyCoroutine());
@@ -163,8 +131,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator DestroyCoroutine()
     {
-        Instantiate(explosionFX, transform.position, Quaternion.identity); ;
-        yield return new WaitForSeconds(deathClip.length);
+        yield return new WaitForSeconds(1);
         Destroy(gameObject);
         loseScreen.Toggle();
         menuButton.interactable = false;
