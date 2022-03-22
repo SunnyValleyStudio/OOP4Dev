@@ -22,11 +22,6 @@ public class Enemy : MonoBehaviour
 
     public EnemySpawner enemySpawner;
 
-    public AudioClip hitClip;
-    public AudioSource hitSource;
-
-    public GameObject explosionFX, hitParticle;
-
     [SerializeField]
     private Health health;
 
@@ -88,31 +83,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator DestroyCoroutine()
-    {
-        yield return new WaitForSeconds(1);
-        Destroy(gameObject);
-    }
-
     public void EnemyKilledOutsideBounds()
     {
         enemySpawner.EnemyKilled(this, false);
         Destroy(gameObject);
     }
 
-    public void GetHitFeedback()
-    {
-        hitSource.PlayOneShot(hitClip);
-        Instantiate(hitParticle, transform.position, Quaternion.identity);
-    }
-
     public void Death()
     {
         enemySpawner.EnemyKilled(this, true);
-        GetComponent<Collider2D>().enabled = false;
         StopAllCoroutines();
-        GetComponent<SpriteRenderer>().enabled = false;
-        Instantiate(explosionFX, transform.position, Quaternion.identity);
-        StartCoroutine(DestroyCoroutine());
+        Destroy(gameObject);
     }
 }
