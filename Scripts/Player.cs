@@ -50,7 +50,10 @@ public class Player : MonoBehaviour, IHittable
         //get input and move
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         input.Normalize();
-        movementVector = speed * input;  
+        movementVector = speed * input;
+
+        if (isAlive == false)
+            return;
 
         //shooting
         if (Input.GetKey(KeyCode.Space))
