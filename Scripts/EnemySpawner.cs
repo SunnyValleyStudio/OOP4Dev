@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public Enemy enemy;
+    public List<Enemy> enemyList;
     
     public float timeMin = 0.1f, timeMax = 0.3f;
     public int maxEnemies = 3;
@@ -47,7 +47,7 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < maxEnemies; i++)
         {
             Vector3 spawnPoint = new Vector3(UnityEngine.Random.Range(minX, maxX), transform.position.y, 0);
-            GameObject newEnemy = Instantiate(enemy.gameObject, spawnPoint, Quaternion.Euler(0, 0, -90));
+            GameObject newEnemy = Instantiate(enemyList[UnityEngine.Random.Range(0,enemyList.Count)].gameObject, spawnPoint, Quaternion.Euler(0, 0, -90));
             currentEnemies.Add(newEnemy);
             newEnemy.GetComponent<Enemy>().enemySpawner = this;
             yield return new WaitForSeconds(UnityEngine.Random.Range(timeMin, timeMax));
