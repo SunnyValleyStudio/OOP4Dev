@@ -22,6 +22,12 @@ namespace SVS.WeaponSystem
         [SerializeField]
         private AudioClip weaponSwap;
 
+
+        private void Start()
+        {
+            if(shootingDelayed)
+                StartCoroutine(DelayShooting());
+        }
         public void SwapWeapon()
         {
             index++;
